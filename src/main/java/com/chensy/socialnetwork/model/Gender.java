@@ -1,5 +1,7 @@
 package com.chensy.socialnetwork.model;
 
+import java.util.Locale;
+
 public enum Gender {
     MALE("m"),
     FEMALE("f"),
@@ -15,7 +17,7 @@ public enum Gender {
         if (genderLetter == null)
             return UNKNOWN;
 
-        switch (genderLetter) {
+        switch (genderLetter.toLowerCase()) {
             case "m":
                 return MALE;
             case "f":

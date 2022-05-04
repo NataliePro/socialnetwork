@@ -2,18 +2,14 @@ $(document).ready(function () {
     // registration selectors
     var register_email = ".register_email";
     var register_password = ".register_password";
-    var register_password_confirm = ".register_password_confirm";
     var register_submit = ".register_submit";
     var error = "_error";
     var register_email_error = register_email + error;
     var register_password_error = register_password + error;
-    var register_password_confirm_error = register_password_confirm + error;
     var $register_email = $(register_email);
     var $register_password = $(register_password);
-    var $register_password_confirm = $(register_password_confirm);
     var $register_email_error = $(register_email_error);
     var $register_password_error = $(register_password_error);
-    var $register_password_confirm_error = $(register_password_confirm_error);
     var $register_submit = $(register_submit);
 
     // login selectors
@@ -26,20 +22,14 @@ $(document).ready(function () {
     });
     $register_password.on("change", function () {
         showError($register_password, checkPassword($register_password), $register_password_error, $register_submit);
-        showError($register_password_confirm, checkPasswordConf($register_password, $register_password_confirm), $register_password_confirm_error, $register_submit);
-    });
-    $register_password_confirm.on("change", function () {
-        showError($register_password_confirm, checkPasswordConf($register_password, $register_password_confirm), $register_password_confirm_error, $register_submit);
     });
     $register_submit.on("click", function (e) {
         var emailTest = checkEmail($register_email);
         var passwordTest = checkPassword($register_password);
-        var passwordConfTest = checkPasswordConf($register_password, $register_password_confirm);
         if(!emailTest || !passwordTest || !passwordConfTest) {
             e.preventDefault();
             showError($register_email, emailTest, $register_email_error, $register_submit);
             showError($register_password, passwordTest, $register_password_error, $register_submit);
-            showError($register_password_confirm, passwordConfTest, $register_password_confirm_error, $register_submit);
             $register_submit.prop('disabled', true);
         }
     });

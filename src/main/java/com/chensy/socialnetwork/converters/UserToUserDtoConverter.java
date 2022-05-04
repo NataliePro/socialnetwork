@@ -25,6 +25,6 @@ public class UserToUserDtoConverter implements Converter<User, UserDTO> {
                       .setPhone(user.getPhone())
                       .setSex(user.getSex().name())
                       .setIsAdmin(user.getRoles().stream().anyMatch(r -> ROLE_ADMIN.equals(r.getAuthority())))
-                      .setDob(user.getDob());
+                      .setDob(user.getDob().toString());
     }
 }

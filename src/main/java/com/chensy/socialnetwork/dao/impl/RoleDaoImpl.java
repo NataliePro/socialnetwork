@@ -12,6 +12,9 @@ public class RoleDaoImpl implements RoleDao {
 
 
     public static final String SQL_SELECT_ROLE_BY_NAME = "select id, name from role where name=:name";
+    private static final String SQL_CREATE_NEW_USER_ROLE = "INSERT INTO user_role (user_id, role_id) " +
+            "SELECT :user_id, r.id FROM role r WHERE r.name =:role_name";
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public RoleDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -28,6 +31,16 @@ public class RoleDaoImpl implements RoleDao {
                 .stream()
                 .findAny()
                 .orElse(null);
+    }
+
+    @Override
+    public void setRole(Long userId, String roleName) {
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("user_id", userId);
+        parameters.addValue("role_name", roleName);
+
+        namedParameterJdbcTemplate.update(SQL_CREATE_NEW_USER_ROLE, parameters);
+
     }
 
 

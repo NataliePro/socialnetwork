@@ -63,6 +63,25 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="register_dob">
+                            <span th:text="#{birth.date}">Date of birth</span>: <input type="date" th:field="*{dob}" name="register_dob" class="form-control" id="register_dob" required/>
+                        </label>
+                        <div class="help-block register_dob_error hidden">Please, provide valid date of birth</div>
+                        <div th:if="${#fields.hasErrors('dob')}" style="margin-bottom: 25px" class="text-danger">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('dob')}" th:text="'Date of birth ' + ${err}" />
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register_sex_m">
+                            <span th:text="М">Sex</span>: <input type="radio" value="M" th:field="*{sex}" name="register_sex_m" class="form-control" id="register_sex_m" required/>
+                        </label>
+                        <label for="register_sex_f">
+                            <span th:text="Ж">Sex</span>: <input type="radio" value="F" th:field="*{sex}" name="register_sex_f" class="form-control" id="register_sex_f" required/>
+                        </label>
+                    </div>
+                    <div class="form-group">
                         <label for="register_password">
                             <span th:text="#{index.password}">Password</span>: <input type="password" th:field="*{password}" name="register_password" class="form-control register_password" id="register_password" required/>
                         </label>
@@ -73,7 +92,6 @@
                             </ul>
                         </div>
                     </div>
-
                     <div class="form-group">
                         <input type="submit" name="submit" value="Register &raquo" class="btn btn-lg btn-success register_submit"/>
                     </div>

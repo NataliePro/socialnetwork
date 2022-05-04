@@ -2,12 +2,15 @@ package com.chensy.socialnetwork.service.impl;
 
 import com.chensy.socialnetwork.converters.UserDtoToUserConverter;
 import com.chensy.socialnetwork.converters.UserToUserDtoConverter;
+import com.chensy.socialnetwork.dao.RoleDao;
 import com.chensy.socialnetwork.dao.UserDao;
 import com.chensy.socialnetwork.dto.UserDTO;
+import com.chensy.socialnetwork.model.Role;
 import com.chensy.socialnetwork.model.User;
 import com.chensy.socialnetwork.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,15 +19,18 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
+    private final RoleDao roleDao;
     private final UserToUserDtoConverter userToUserDtoConverter;
     private final UserDtoToUserConverter userDtoToUserConverter;
     private final BCryptPasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserDao userDao,
+                           RoleDao roleDao,
                            UserToUserDtoConverter userToUserDtoConverter,
                            UserDtoToUserConverter userDtoToUserConverter,
                            BCryptPasswordEncoder passwordEncoder) {
         this.userDao = userDao;
+        this.roleDao = roleDao;
         this.userToUserDtoConverter = userToUserDtoConverter;
         this.userDtoToUserConverter = userDtoToUserConverter;
         this.passwordEncoder = passwordEncoder;
@@ -51,9 +57,12 @@ public class UserServiceImpl implements UserService {
         return userToUserDtoConverter.convert(userByEmail);
     }
 
+    @Transactional
     @Override
     public void createUser(UserDTO userDto) {
-        userDao.createUser(userDtoToUserConverter.convert(userDto));
+        User user = userDtoToUserConverter.convert(userDto);
+        User userWithId = userDao.createUser(user);
+        roleDao.setRole(userWithId.getId(), Role.ROLE_USER.name());
     }
 
     @Override
@@ -77,7 +86,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> getUserByFirstNameAndLastNamePrefix(String firstPrefix, String lastPrefix) {
         List<User> userByPrefix = userDao.getUsersByFirstNameAndLastNamePrefix(firstPrefix.concat("%"), lastPrefix.concat("%"));
         return userByPrefix.stream()
-                .map(user -> userToUserDtoConverter.convert(user))
+                .map(userToUserDtoConverter::convert)
                 .collect(Collectors.toList());
     }
 

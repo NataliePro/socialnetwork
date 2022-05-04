@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class UserDaoImpl implements UserDao {
@@ -28,16 +30,20 @@ public class UserDaoImpl implements UserDao {
             "interests  " +
             "FROM user order by username";
 
-    public static final String SQL_SELECT_USER_BY_ID = "SELECT id, " +
-            "username, " +
-            "password, " +
-            "first_name, " +
-            "last_name, " +
-            "date_of_birth," +
-            "sex," +
-            "phone," +
-            "interests  " +
-            "FROM user WHERE id =:user_id";
+    public static final String SQL_SELECT_USER_BY_ID = "SELECT u.id, " +
+            "u.username, " +
+            "u.password, " +
+            "u.first_name, " +
+            "u.last_name, " +
+            "u.date_of_birth," +
+            "u.sex," +
+            "u.phone," +
+            "u.interests,  " +
+            "r.name as role_name  " +
+            "FROM user u " +
+            "LEFT JOIN user_role ur ON ur.user_id = u.id " +
+            "LEFT JOIN role r ON r.id = ur.role_id " +
+            "WHERE u.id =:user_id";
 
     public static final String SQL_SELECT_USER_BY_PREFIX = "SELECT id, " +
             "username, " +
@@ -51,19 +57,23 @@ public class UserDaoImpl implements UserDao {
             "FROM user WHERE first_name LIKE :firstPrefix AND last_name LIKE :lastPrefix " +
             "order by id";
 
-    public static final String SQL_SELECT_USER_BY_EMAIL = "SELECT id, " +
-            "username, " +
-            "password, " +
-            "first_name, " +
-            "last_name, " +
-            "date_of_birth," +
-            "sex," +
-            "phone," +
-            "interests  " +
-            "FROM user WHERE username =:email";
+    public static final String SQL_SELECT_USER_BY_EMAIL = "SELECT u.id, " +
+            "u.username, " +
+            "u.password, " +
+            "u.first_name, " +
+            "u.last_name, " +
+            "u.date_of_birth," +
+            "u.sex," +
+            "u.phone," +
+            "u.interests,  " +
+            "r.name as role_name  " +
+            "FROM user u " +
+            "LEFT JOIN user_role ur ON ur.user_id = u.id " +
+            "LEFT JOIN role r ON r.id = ur.role_id " +
+            "WHERE username =:email";
 
     public static final String SQL_MAKE_USER_ADMIN_BY_ID = "UPDATE user_role ur " +
-            "SET ur.role_id = (SELECT id FROM role WHERE name = 'ADMIN') " +
+            "SET ur.role_id = (SELECT id FROM role WHERE name = 'ROLE_ADMIN') " +
             "WHERE ur.user_id =:user_id";
     private static final String SQL_BLOCK_USER_BY_ID = "DELETE FROM user_role " +
             "WHERE user_id =:user_id";
@@ -116,10 +126,15 @@ public class UserDaoImpl implements UserDao {
     }
 
     private User getUserFromDb(String sql, MapSqlParameterSource parameters) {
-        return namedParameterJdbcTemplate.query(sql, parameters, new UserMapper())
-                .stream()
-                .findAny()
-                .orElse(null);
+
+        List<User> userList = namedParameterJdbcTemplate.query(sql, parameters, new UserMapper());
+        if (userList != null && !userList.isEmpty()) {
+            Set<Role> roles = userList.stream().flatMap(user -> user.getRoles().stream()).collect(Collectors.toSet());
+            User user = userList.get(0);
+            user.setRoles(roles);
+            return user;
+        }
+        return null;
     }
 
     private int updateUser(String sql, MapSqlParameterSource parameters) {
