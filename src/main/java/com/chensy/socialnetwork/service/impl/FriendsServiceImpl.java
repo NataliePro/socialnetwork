@@ -3,6 +3,7 @@ package com.chensy.socialnetwork.service.impl;
 import com.chensy.socialnetwork.converters.UserDtoToUserConverter;
 import com.chensy.socialnetwork.converters.UserToUserDtoConverter;
 import com.chensy.socialnetwork.dao.FriendshipDao;
+import com.chensy.socialnetwork.dao.UserDao;
 import com.chensy.socialnetwork.dto.UserDTO;
 import com.chensy.socialnetwork.model.Friendship;
 import com.chensy.socialnetwork.model.User;
@@ -23,14 +24,15 @@ public class FriendsServiceImpl implements FriendsService {
 
     private final FriendshipDao friendshipDao;
     private final UserToUserDtoConverter userToUserDtoConverter;
-    private final UserDtoToUserConverter userDtoToUserConverter;
+    private final UserDao userDao;
 
     public FriendsServiceImpl(FriendshipDao friendshipDao,
                               UserToUserDtoConverter userToUserDtoConverter,
-                              UserDtoToUserConverter userDtoToUserConverter) {
+                              UserDtoToUserConverter userDtoToUserConverter,
+                              UserDao userDao) {
         this.friendshipDao = friendshipDao;
         this.userToUserDtoConverter = userToUserDtoConverter;
-        this.userDtoToUserConverter = userDtoToUserConverter;
+        this.userDao = userDao;
     }
 
     @Override
@@ -79,29 +81,32 @@ public class FriendsServiceImpl implements FriendsService {
     }
 
     @Override
+    @Transactional
     public void deleteFriendship(UserDTO userDTO, Long friendId) {
-        User user = userDtoToUserConverter.convert(userDTO);
-        friendshipDao.deleteFriendRequests(user, friendId);
+        User userWithId = userDao.findUserByEmail(userDTO.getEmail());
+        friendshipDao.deleteFriendRequests(userWithId.getId(), friendId);
     }
 
     @Override
     @Transactional
     public void acceptFriendship(UserDTO userDTO, Long friendId) {
-        User user = userDtoToUserConverter.convert(userDTO);
-        friendshipDao.deleteFriendRequests(user, friendId);
-        friendshipDao.addFriendship(user, friendId);
+        User userWithId = userDao.findUserByEmail(userDTO.getEmail());
+        friendshipDao.deleteFriendRequests(userWithId.getId(), friendId);
+        friendshipDao.addFriendship(userWithId.getId(), friendId);
     }
 
     @Override
+    @Transactional
     public void addToFriends(UserDTO userDTO, Long friendId) {
-        User user = userDtoToUserConverter.convert(userDTO);
-        friendshipDao.addToFriends(user, friendId);
+        User userWithId = userDao.findUserByEmail(userDTO.getEmail());
+        friendshipDao.addToFriends(userWithId.getId(), friendId);
     }
 
     @Override
+    @Transactional
     public Boolean checkFriendship(UserDTO userDTO, UserDTO friendDTO) {
-        User user = userDtoToUserConverter.convert(userDTO);
-        User friend = userDtoToUserConverter.convert(friendDTO);
-        return friendshipDao.checkFriendshipExists(user, friend);
+        User userWithId = userDao.findUserByEmail(userDTO.getEmail());
+        User friendWithId = userDao.findUserByEmail(friendDTO.getEmail());
+        return friendshipDao.checkFriendshipExists(userWithId.getId(), friendWithId.getId());
     }
 }

@@ -8,7 +8,6 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Component
@@ -16,7 +15,6 @@ import java.time.format.DateTimeFormatter;
 public class UserDtoToUserConverter implements Converter<UserDTO, User> {
 
     private final BCryptPasswordEncoder passwordEncoder;
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
     public User convert(UserDTO userDTO) {
@@ -26,7 +24,7 @@ public class UserDtoToUserConverter implements Converter<UserDTO, User> {
                 .setLastName(userDTO.getLastName())
                 .setPhone(userDTO.getPhone())
                 .setSex(Gender.getGenderByLetter(userDTO.getSex()))
-                .setDob(LocalDate.parse(userDTO.getDob(),dateTimeFormatter))
+                .setDob(userDTO.getDob())
                 .setPassword(passwordEncoder.encode(userDTO.getPassword()));
     }
 }
