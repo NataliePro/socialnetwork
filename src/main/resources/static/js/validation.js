@@ -3,6 +3,7 @@ $(document).ready(function () {
     var register_email = ".register_email";
     var register_password = ".register_password";
     var register_submit = ".register_submit";
+    var user_search_submit = ".user_search_submit";
     var error = "_error";
     var register_email_error = register_email + error;
     var register_password_error = register_password + error;
@@ -11,6 +12,7 @@ $(document).ready(function () {
     var $register_email_error = $(register_email_error);
     var $register_password_error = $(register_password_error);
     var $register_submit = $(register_submit);
+    var $user_search_submit = $(user_search_submit);
 
     // login selectors
     var $login_email = $(".login_email");

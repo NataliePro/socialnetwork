@@ -17,5 +17,5 @@ public interface UserService {
     void updatePassword(String password, Long id);
 
     UserDTO getUserById(Long id);
-    List<UserDTO> getUserByFirstNameAndLastNamePrefix(String firstPrefix, String lastPrefix);
+    List<UserDTO> getUserByFirstNameAndLastNamePrefix(String firstPrefix, String lastPrefix, int maxUsersCount);
 }

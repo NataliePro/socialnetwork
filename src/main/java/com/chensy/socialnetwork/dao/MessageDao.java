@@ -9,7 +9,7 @@ public interface MessageDao {
 
     List<Message> findConversation(Long userId, Long companionId);
 
-    Message findFirstBySenderIdOrReceiverIdOrderByIdDesc(Long senderId, Long receiverId);
+    Message findFirstMessage(Long senderId, Long receiverId);
 
-    void saveMessage(Message message);
+    int saveMessage(Message message);
 }

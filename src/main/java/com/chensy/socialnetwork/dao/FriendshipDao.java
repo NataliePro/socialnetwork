@@ -8,11 +8,11 @@ import java.util.List;
 public interface FriendshipDao {
     List<Friendship> findAcceptedFriendshipUsers(Long userId);
 
-    void deleteFriendRequests(Long userId, Long friendId);
+    int deleteFriendRequests(Long userId, Long friendId);
 
-    void addFriendship(Long userId, Long friendId);
+    int addFriendship(Long userId, Long friendId);
 
-    void addToFriends(Long userId, Long friendId);
+    int addToFriends(Long userId, Long friendId);
 
     boolean checkFriendshipExists(Long userId, Long friend_id);
 

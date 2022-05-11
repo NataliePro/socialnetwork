@@ -1,6 +1,7 @@
 package com.chensy.socialnetwork.controllers;
 
 
+import com.chensy.socialnetwork.UserSearch;
 import com.chensy.socialnetwork.dto.UserDTO;
 import com.chensy.socialnetwork.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,20 +24,20 @@ public class UsersController {
     private final UserService userService;
 
     @GetMapping("/users")
-    public String getUserList(@RequestParam(value = "search", required = false) String search,
-                              @RequestParam(value = "page", required = false) Integer page,
-                              Model model) {
+    public String getUserList(Model model) {
 
         model.addAttribute("userList", userService.getAllUsers());
+        model.addAttribute("userSearch", new UserSearch());
         return "users";
     }
 
     @GetMapping("/search")
-    public String getUsersByPrefix(@RequestParam(value = "firstprefix", required = false) String firstPrefix,
-                                   @RequestParam(value = "lastprefix", required = false) String lastprefix,
+    public String getUsersByPrefix(@RequestParam(value = "firstName", required = false) String firstName,
+                                   @RequestParam(value = "lastName", required = false) String lastName,
                                    Model model) {
 
-        model.addAttribute("userList", userService.getUserByFirstNameAndLastNamePrefix(firstPrefix, lastprefix));
+        model.addAttribute("userList", userService.getUserByFirstNameAndLastNamePrefix(firstName, lastName, 30));
+        model.addAttribute("userSearch", new UserSearch().setFirstName(firstName).setLastName(lastName));
         return "users";
 
     }

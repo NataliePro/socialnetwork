@@ -33,7 +33,11 @@ public class UserMapper implements RowMapper<User> {
     private Set<Role> getRole(String role_name) {
         Role role = Optional.ofNullable(role_name)
                 .map(Role::valueOf)
-                .orElseThrow(() -> new InvalidParameterException(String.format("Role %s not found!", role_name)));
+                .orElse(null);
+
+        if (role == null)
+            return new HashSet<>();
+
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         return roles;

@@ -3,6 +3,7 @@ package com.chensy.socialnetwork.dao.impl;
 import com.chensy.socialnetwork.dao.UserDao;
 import com.chensy.socialnetwork.mapper.RoleMapper;
 import com.chensy.socialnetwork.mapper.UserMapper;
+import com.chensy.socialnetwork.mapper.UserShortMapper;
 import com.chensy.socialnetwork.model.Gender;
 import com.chensy.socialnetwork.model.Role;
 import com.chensy.socialnetwork.model.User;
@@ -122,7 +123,7 @@ public class UserDaoImpl implements UserDao {
         parameters.addValue("firstPrefix", firstPrefix);
         parameters.addValue("lastPrefix", lastPrefix);
 
-        return namedParameterJdbcTemplate.query(SQL_SELECT_USER_BY_PREFIX, parameters, new UserMapper());
+        return namedParameterJdbcTemplate.query(SQL_SELECT_USER_BY_PREFIX, parameters, new UserShortMapper());
     }
 
     private User getUserFromDb(String sql, MapSqlParameterSource parameters) {

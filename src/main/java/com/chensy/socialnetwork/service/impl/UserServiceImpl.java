@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        return null;
+        return new ArrayList<User>();
     }
 
     @Override
@@ -83,9 +84,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> getUserByFirstNameAndLastNamePrefix(String firstPrefix, String lastPrefix) {
+    public List<UserDTO> getUserByFirstNameAndLastNamePrefix(String firstPrefix, String lastPrefix, int maxUsersCount) {
         List<User> userByPrefix = userDao.getUsersByFirstNameAndLastNamePrefix(firstPrefix.concat("%"), lastPrefix.concat("%"));
-        return userByPrefix.stream()
+        return userByPrefix.stream().limit(maxUsersCount)
                 .map(userToUserDtoConverter::convert)
                 .collect(Collectors.toList());
     }

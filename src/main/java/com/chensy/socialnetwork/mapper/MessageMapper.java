@@ -1,22 +1,24 @@
 package com.chensy.socialnetwork.mapper;
 
-import com.chensy.socialnetwork.model.Friendship;
 import com.chensy.socialnetwork.model.Gender;
+import com.chensy.socialnetwork.model.Message;
 import com.chensy.socialnetwork.model.User;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-public class FriendshipMapper implements RowMapper<Friendship> {
+public class MessageMapper implements RowMapper<Message> {
     @Override
-    public Friendship mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Friendship()
-                .setId(rs.getLong("id"))
-                .setAccepted(rs.getInt("accepted") == 1 ? true : false)
-                .setUserReceiver(getUserReceiver(rs))
-                .setUserSender(getUserSender(rs));
+    public Message mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new Message()
+                .setId(rs.getInt("id"))
+                .setTime(rs.getObject("time", LocalDateTime.class))
+                .setSender(getUserSender(rs))
+                .setReceiver(getUserReceiver(rs))
+                .setMessage(rs.getString("message"));
     }
 
     private User getUserSender(ResultSet rs) throws SQLException {

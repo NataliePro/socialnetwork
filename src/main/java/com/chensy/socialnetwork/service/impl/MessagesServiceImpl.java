@@ -10,7 +10,6 @@ import com.chensy.socialnetwork.model.User;
 import com.chensy.socialnetwork.service.MessagesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -44,7 +43,7 @@ public class MessagesServiceImpl implements MessagesService {
 
     @Override
     public MessageDTO getRecentMessage(Long id) {
-        Message message = messageDao.findFirstBySenderIdOrReceiverIdOrderByIdDesc(id, id);
+        Message message = messageDao.findFirstMessage(id, id);
         MessageDTO messageDTO = messageToMessageDtoConverter.convert(message, id);
         return messageDTO;
     }

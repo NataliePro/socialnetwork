@@ -88,27 +88,27 @@ public class FriendshipDaoImpl implements FriendshipDao {
     }
 
     @Override
-    public void deleteFriendRequests(Long userId, Long friendId) {
+    public int deleteFriendRequests(Long userId, Long friendId) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("user_id", userId);
         parameters.addValue("friend_id", friendId);
-        namedParameterJdbcTemplate.update(SQL_DELETE_FRIENDSHIP_BY_USER_ID, parameters);
+        return namedParameterJdbcTemplate.update(SQL_DELETE_FRIENDSHIP_BY_USER_ID, parameters);
     }
 
     @Override
-    public void addFriendship(Long userId, Long friendId) {
+    public int addFriendship(Long userId, Long friendId) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("user_id", userId);
         parameters.addValue("friend_id", friendId);
-        namedParameterJdbcTemplate.update(SQL_ADD_FRIENDSHIP_BY_USER_ID, parameters);
+        return namedParameterJdbcTemplate.update(SQL_ADD_FRIENDSHIP_BY_USER_ID, parameters);
     }
 
     @Override
-    public void addToFriends(Long userId, Long friendId) {
+    public int addToFriends(Long userId, Long friendId) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("user_id", userId);
         parameters.addValue("friend_id", friendId);
-        namedParameterJdbcTemplate.update(SQL_ADD_TO_FRIENDS, parameters);
+        return namedParameterJdbcTemplate.update(SQL_ADD_TO_FRIENDS, parameters);
     }
 
     @Override
