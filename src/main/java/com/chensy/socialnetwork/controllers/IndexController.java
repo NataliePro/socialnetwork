@@ -2,6 +2,7 @@ package com.chensy.socialnetwork.controllers;
 
 
 import com.chensy.socialnetwork.dto.UserDTO;
+import com.chensy.socialnetwork.service.CountryService;
 import com.chensy.socialnetwork.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import java.io.IOException;
 public class IndexController {
 
     private final UserService userService;
+    private final CountryService countryService;
 
     @GetMapping("/")
     public String indexPage(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
@@ -28,6 +30,7 @@ public class IndexController {
             return null;
         }
         model.addAttribute("user", new UserDTO());
+        model.addAttribute("countryList", countryService.getAllCountries());
         return "index";
     }
 

@@ -5,6 +5,8 @@ import com.chensy.socialnetwork.converters.UserToUserDtoConverter;
 import com.chensy.socialnetwork.dao.RoleDao;
 import com.chensy.socialnetwork.dao.UserDao;
 import com.chensy.socialnetwork.dto.UserDTO;
+import com.chensy.socialnetwork.model.Country;
+import com.chensy.socialnetwork.model.Gender;
 import com.chensy.socialnetwork.model.Role;
 import com.chensy.socialnetwork.model.User;
 import com.chensy.socialnetwork.service.UserService;
@@ -48,8 +50,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return new ArrayList<User>();
+    public List<User> getRecentUsers(int maxUsersCount) {
+        return userDao.getRecentUsers(maxUsersCount);
     }
 
     @Override
@@ -68,7 +70,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(UserDTO userDto) {
-        userDao.updateUser(userDtoToUserConverter.convert(userDto));
+        var user = new User().setId(userDto.getId())
+                .setEmail(userDto.getEmail())
+                .setFirstName(userDto.getFirstName())
+                .setLastName(userDto.getLastName())
+                .setPhone(userDto.getPhone())
+                .setSex(Gender.getGenderByLetter(userDto.getSex()))
+                .setDob(userDto.getDob())
+                .setInterests(userDto.getInterests())
+                .setCountry(new Country().setName(userDto.getCountry()));
+        userDao.updateUser(user);
     }
 
     @Override
@@ -84,9 +95,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> getUserByFirstNameAndLastNamePrefix(String firstPrefix, String lastPrefix, int maxUsersCount) {
+    public List<UserDTO> getUserByFirstNameAndLastNamePrefix(String firstPrefix, String lastPrefix) {
         List<User> userByPrefix = userDao.getUsersByFirstNameAndLastNamePrefix(firstPrefix.concat("%"), lastPrefix.concat("%"));
-        return userByPrefix.stream().limit(maxUsersCount)
+        return userByPrefix.stream()
                 .map(userToUserDtoConverter::convert)
                 .collect(Collectors.toList());
     }

@@ -2,9 +2,7 @@ package com.chensy.socialnetwork.model;
 
 import lombok.*;
 
-@Getter
-@Setter
-@Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Friendship {

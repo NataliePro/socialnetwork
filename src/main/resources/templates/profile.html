@@ -37,66 +37,65 @@
                                 </tr>
                             </table>
                         </td>
-                        <td class="profile-info">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 th:text="#{profile.info}">Profile</h3>
-                                </div>
-                                <div class="list-group">
-                                    <p class="list-group-item">
-                                        <span th:text="#{firstName}">First name</span>:
-                                        <span th:text="${user.firstName}">Tyron</span>
-                                    </p>
-                                    <p class="list-group-item">
-                                        <span th:text="#{lastName}">First name</span>:
-                                        <span th:text="${user.lastName}">Lanister</span>
-                                    </p>
-                                    <p class="list-group-item">
-                                        <span th:text="#{birth.date}">Birth date</span>:
-                                        <span th:text="${#temporals.format(user.dob, 'dd.MM.yyyy')}">11.01.1989</span>
-                                    </p>
-                                    <p class="list-group-item">
-                                        <span th:text="#{gender}">Gender</span>:
-                                        <span th:if="${user.sex.equals('MALE')}" th:text="#{gender.male}">Male</span>
-                                        <span th:if="${user.sex.equals('FEMALE')}" th:text="#{gender.female}">Female</span>
-                                    </p>
-                                    <p class="list-group-item">
-                                        <span th:text="#{phone}">Phone</span>:
-                                        <span th:text="${user.phone}">+7 999 999 99 99</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr th:if="${sessionUser.isAdmin}">
-                        <td></td>
-                        <td>
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title" th:text="#{profile.admin.menu}">Admin menu</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="message-left" th:if="${!user.isAdmin}">
-                                        <form th:action="@{/admin/makeAdmin}" action="/admin/makeAdmin" method="POST">
-                                            <input type="hidden" name="userId" th:value="${user.id}">
-                                            <button class="btn btn-success" name="submit"
-                                                    type="submit" th:text="#{profile.make.admin}">Make Admin
-                                            </button>
-                                        </form>
-                                    </div>
-                                    <div class="message-left">
-                                        <form th:action="@{/admin/block}" action="/admin/block" method="POST">
-                                            <input type="hidden" name="userId" th:value="${user.id}">
-                                            <button class="btn btn-danger" name="submit"
-                                                    type="submit" th:text="#{profile.block}">Block
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
                     </tr>
                 </table>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 th:text="#{profile.info}">Profile</h3>
+                </div>
+                <div class="list-group">
+                    <p class="list-group-item">
+                        <span th:text="#{firstName}">First name</span>:
+                        <span th:text="${user.firstName}">Tyron</span>
+                    </p>
+                    <p class="list-group-item">
+                        <span th:text="#{lastName}">First name</span>:
+                        <span th:text="${user.lastName}">Lanister</span>
+                    </p>
+                    <p class="list-group-item">
+                        <span th:text="#{birth.date}">Birth date</span>:
+                        <span th:text="${#temporals.format(user.dob, 'dd.MM.yyyy')}">11.01.1989</span>
+                    </p>
+                    <p class="list-group-item">
+                        <span th:text="#{gender}">Gender</span>:
+                        <span th:if="${user.sex.equals('MALE')}" th:text="#{gender.male}">Male</span>
+                        <span th:if="${user.sex.equals('FEMALE')}" th:text="#{gender.female}">Female</span>
+                    </p>
+                    <p class="list-group-item">
+                        <span th:text="#{phone}">Phone</span>:
+                        <span th:text="${user.phone}">+7 999 999 99 99</span>
+                    </p>
+                    <p class="list-group-item">
+                        <span th:text="#{interests}">Interests</span>:
+                        <span th:text="${user.interests}">cars</span>
+                    </p>
+                    <p class="list-group-item">
+                        <span th:text="#{country}">Country</span>:
+                        <span th:text="${user.country}">Russia</span>
+                    </p>
+                </div>
+            </div>
+            <div class="profile-block" th:if="${sessionUser.isAdmin}">
+                <h3 class="panel-title" th:text="#{profile.admin.menu}">Admin menu</h3>
+                <div class="panel panel-default">
+                    <div class="message-left" th:if="${!user.isAdmin}">
+                        <form th:action="@{/admin/makeAdmin}" action="/admin/makeAdmin" method="POST">
+                            <input type="hidden" name="userId" th:value="${user.id}">
+                            <button class="btn btn-success" name="submit"
+                                    type="submit" th:text="#{profile.make.admin}">Make Admin
+                            </button>
+                        </form>
+                    </div>
+                    <div class="message-left">
+                        <form th:action="@{/admin/block}" action="/admin/block" method="POST">
+                            <input type="hidden" name="userId" th:value="${user.id}">
+                            <button class="btn btn-danger" name="submit"
+                                    type="submit" th:text="#{profile.block}">Block
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
             <div class="profile-block" th:if="${sessionUser.id == user.id && recentMessage != null }">
                 <h3 th:text="#{profile.recent.message}">Recent Message:</h3>

@@ -1,6 +1,7 @@
 package com.chensy.socialnetwork.dao.impl;
 
 
+import com.chensy.socialnetwork.model.Country;
 import com.chensy.socialnetwork.model.Gender;
 import com.chensy.socialnetwork.model.Role;
 import com.chensy.socialnetwork.model.User;
@@ -35,7 +36,7 @@ class UserDaoImplTest {
 
     @Test
     void updateUserSettings() {
-        int i = userDao.updateUserSettings("qq", "qq", LocalDate.now(), "M", "123", 2L);
+        int i = userDao.updateUserSettings("qq", "qq", LocalDate.now(), "M", "123", 2L, "Россия", "Музыка");
         assertTrue(i > 0);
     }
 
@@ -53,7 +54,8 @@ class UserDaoImplTest {
         .setLastName("111")
         .setSex(Gender.FEMALE)
         .setPassword("111")
-        .setDob(LocalDate.now()));
+        .setDob(LocalDate.now()))
+        .setCountry(new Country().setName("������"));
         assertNotNull(user);
     }
 

@@ -1,5 +1,6 @@
 package com.chensy.socialnetwork.mapper;
 
+import com.chensy.socialnetwork.model.Country;
 import com.chensy.socialnetwork.model.Gender;
 import com.chensy.socialnetwork.model.Role;
 import com.chensy.socialnetwork.model.User;
@@ -19,7 +20,7 @@ public class UserMapper implements RowMapper<User> {
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new User()
                 .setEmail(rs.getString("username"))
-                .setId(rs.getLong("id"))
+                .setId(rs.getLong("user_id"))
                 .setPassword(rs.getString("password"))
                 .setFirstName(rs.getString("first_name"))
                 .setLastName(rs.getString("last_name"))
@@ -27,7 +28,12 @@ public class UserMapper implements RowMapper<User> {
                 .setSex(Gender.getGenderByLetter(rs.getString("sex")))
                 .setPhone(rs.getString("phone"))
                 .setInterests(rs.getString("interests"))
+                .setCountry(getCountry(rs.getInt("country_id"), rs.getString("country_name")))
                 .setRoles(getRole(rs.getString("role_name")));
+    }
+
+    private Country getCountry(Integer countryId, String countryName) {
+        return new Country().setId(countryId).setName(countryName);
     }
 
     private Set<Role> getRole(String role_name) {

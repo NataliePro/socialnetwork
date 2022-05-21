@@ -74,11 +74,21 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="register_sex_m">
-                            <span th:text="М">Sex</span>: <input type="radio" value="M" th:field="*{sex}" name="register_sex_m" class="form-control" id="register_sex_m" required/>
+                        <label for="sex"><span th:text="#{gender}">Gender</span>:
+                            <p><select name="sex" size="1" th:field="*{sex}" id="sex">
+                                <option selected value="M">Мужчина</option>
+                                <option value="F">Женщина</option>
+                            </select>
                         </label>
-                        <label for="register_sex_f">
-                            <span th:text="Ж">Sex</span>: <input type="radio" value="F" th:field="*{sex}" name="register_sex_f" class="form-control" id="register_sex_f" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="country"><span th:text="#{country}">Country</span>:
+                        <p><select name="country" size="1" th:field="*{country}" id="country">
+                            <option selected value="Выберите страну"></option>
+                            <option th:each="country : ${countryList}"
+                                    th:value="${country.name}"
+                                    th:text="${country.name}"></option>
+                        </select>
                         </label>
                     </div>
                     <div class="form-group">

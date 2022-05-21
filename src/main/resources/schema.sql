@@ -9,6 +9,12 @@ CREATE TABLE role
     name VARCHAR(255) UNIQUE NOT NULL
 );
 
+CREATE TABLE countries
+(
+    id INT PRIMARY KEY,
+    name VARCHAR(255)
+);
+
 CREATE TABLE user
 (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -20,7 +26,9 @@ CREATE TABLE user
     date_of_birth DATE NOT NULL,
     sex VARCHAR(1) NOT NULL,
     phone VARCHAR(255),
-    interests VARCHAR(255)
+    interests VARCHAR(255),
+    country INT,
+    FOREIGN KEY (country) REFERENCES countries (id)
 );
 
 CREATE TABLE user_role

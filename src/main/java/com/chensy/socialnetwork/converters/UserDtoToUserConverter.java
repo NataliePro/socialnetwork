@@ -1,14 +1,13 @@
 package com.chensy.socialnetwork.converters;
 
 import com.chensy.socialnetwork.dto.UserDTO;
+import com.chensy.socialnetwork.model.Country;
 import com.chensy.socialnetwork.model.Gender;
 import com.chensy.socialnetwork.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.time.format.DateTimeFormatter;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +24,8 @@ public class UserDtoToUserConverter implements Converter<UserDTO, User> {
                 .setPhone(userDTO.getPhone())
                 .setSex(Gender.getGenderByLetter(userDTO.getSex()))
                 .setDob(userDTO.getDob())
-                .setPassword(passwordEncoder.encode(userDTO.getPassword()));
+                .setPassword(passwordEncoder.encode(userDTO.getPassword()))
+                .setInterests(userDTO.getInterests())
+                .setCountry(new Country().setName(userDTO.getCountry()));
     }
 }

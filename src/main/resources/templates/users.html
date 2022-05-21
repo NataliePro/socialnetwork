@@ -40,11 +40,11 @@
                 <input type="submit" name="submit" value="User search" class="btn btn-lg btn-success user_search_submit"/>
             </div>
             <div class="friends-top">
-                <h3 th:text="#{users.header}">Users:</h3>
+                <h3 th:text="#{users.recent}">Users:</h3>
                 <table class="table friends">
                     <tr th:each="user : ${userList}">
                         <td>
-                            <a th:replace="template.html :: profileImage(${user})"></a>
+                            <a th:replace="template.html :: profileUser(${user})"></a>
                     </tr>
                 </table>
             </div>

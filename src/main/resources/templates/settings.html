@@ -38,18 +38,18 @@
                             </div>
                             <div class="list-group-item">
                                 <label for="datepicker"><span th:text="#{birth.date}">Birth date</span>:
-                                    <input type="text" size="30" class="form-control" name="dob"
-                                           th:value="${#temporals.format(user.dob, 'dd.MM.yyyy')}"
+                                    <input type="date" class="form-control" name="dob"
+                                           th:value="${user.dob}"
                                            id="datepicker">
                                 </label>
                             </div>
                             <div class="list-group-item"><span th:text="#{gender}">Gender</span>:
                                 <label class="radio-inline">
-                                    <input type="radio" name="sex" value="Male" th:checked="${user.sex.equals('MALE')}">
+                                    <input type="radio" name="sex" value="M" th:checked="${user.sex.equals('MALE')}">
                                     <span th:text="#{gender.male}">Male</span>
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="sex"  value="Female" th:checked="${user.sex.equals('FEMALE')}">
+                                    <input type="radio" name="sex"  value="F" th:checked="${user.sex.equals('FEMALE')}">
                                     <span th:text="#{gender.female}">Female</span>
                                 </label>
                             </div>
@@ -57,6 +57,22 @@
                                 <label for="phone"><span th:text="#{phone}">Phone</span>: <input type="text" name="phone" class="form-control"
                                                                  th:value="${user.phone}"
                                                                  id="phone"/>
+                                </label>
+                            </div>
+                            <div class="list-group-item">
+                                <label for="interests"><span th:text="#{interests}">Interests</span>: <input type="text" name="interests" class="form-control"
+                                                                                                 th:value="${user.interests}"
+                                                                                                 id="interests"/>
+                                </label>
+                            </div>
+                            <div class="list-group-item">
+                                <label for="country"><span th:text="#{country}">Country</span>:
+                                    <p><select name="country" size="1" th:field="*{country}" id="country">
+                                        <option selected value="Выберите страну"></option>
+                                        <option th:each="country : ${countryList}"
+                                                th:value="${country.name}"
+                                                th:text="${country.name}"></option>
+                                    </select>
                                 </label>
                             </div>
                         </div>

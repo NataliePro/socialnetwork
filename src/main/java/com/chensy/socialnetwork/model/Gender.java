@@ -1,6 +1,5 @@
 package com.chensy.socialnetwork.model;
 
-import java.util.Locale;
 
 public enum Gender {
     MALE("m"),

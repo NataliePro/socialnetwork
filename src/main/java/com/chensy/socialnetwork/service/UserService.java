@@ -8,14 +8,11 @@ import java.util.List;
 public interface UserService {
     void makeUserAdmin(long userId);
     void blockUser(long userId);
-    List<User> getAllUsers();
+    List<User> getRecentUsers(int maxUsersCount);
     UserDTO getUserByEmail(String email);
     void createUser(UserDTO userDto);
-
     void updateUser(UserDTO user);
-
     void updatePassword(String password, Long id);
-
     UserDTO getUserById(Long id);
-    List<UserDTO> getUserByFirstNameAndLastNamePrefix(String firstPrefix, String lastPrefix, int maxUsersCount);
+    List<UserDTO> getUserByFirstNameAndLastNamePrefix(String firstPrefix, String lastPrefix);
 }

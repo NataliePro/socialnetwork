@@ -79,7 +79,7 @@
         </div>
         <div class="col-md-9">
             <p>
-                <a th:fragment="profileImage(user)" th:href="@{'/user/profile/' + ${user.id}}">
+                <a th:fragment="profileUser(user)" th:href="@{'/user/profile/' + ${user.id}}">
                     <span th:text="${user.firstName + ' ' + user.lastName}">Sansa Stark</span>
                 </a>
             </p>

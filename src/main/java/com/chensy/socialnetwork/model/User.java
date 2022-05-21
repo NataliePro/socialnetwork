@@ -36,6 +36,8 @@ public class User {
 
     private Set<Role> roles = new HashSet<>();
 
+    private Country country;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

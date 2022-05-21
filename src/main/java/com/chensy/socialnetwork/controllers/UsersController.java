@@ -21,12 +21,13 @@ import static com.chensy.socialnetwork.utils.ServerUtils.getUserFromSession;
 @RequiredArgsConstructor
 public class UsersController {
 
+    public static final int MAX_USERS_COUNT_PER_PAGE = 30;
     private final UserService userService;
 
     @GetMapping("/users")
     public String getUserList(Model model) {
 
-        model.addAttribute("userList", userService.getAllUsers());
+        model.addAttribute("userList", userService.getRecentUsers(MAX_USERS_COUNT_PER_PAGE));
         model.addAttribute("userSearch", new UserSearch());
         return "users";
     }
@@ -36,7 +37,7 @@ public class UsersController {
                                    @RequestParam(value = "lastName", required = false) String lastName,
                                    Model model) {
 
-        model.addAttribute("userList", userService.getUserByFirstNameAndLastNamePrefix(firstName, lastName, 30));
+        model.addAttribute("userList", userService.getUserByFirstNameAndLastNamePrefix(firstName, lastName));
         model.addAttribute("userSearch", new UserSearch().setFirstName(firstName).setLastName(lastName));
         return "users";
 

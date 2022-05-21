@@ -4,12 +4,14 @@ import com.chensy.socialnetwork.dao.UserDao;
 import com.chensy.socialnetwork.mapper.RoleMapper;
 import com.chensy.socialnetwork.mapper.UserMapper;
 import com.chensy.socialnetwork.mapper.UserShortMapper;
+import com.chensy.socialnetwork.model.Country;
 import com.chensy.socialnetwork.model.Gender;
 import com.chensy.socialnetwork.model.Role;
 import com.chensy.socialnetwork.model.User;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,18 +22,9 @@ import java.util.stream.Collectors;
 @Component
 public class UserDaoImpl implements UserDao {
 
-    public static final String SQL_SELECT_ALL_USERS = "SELECT id, " +
-            "username, " +
-            "password, " +
-            "first_name, " +
-            "last_name, " +
-            "date_of_birth," +
-            "sex," +
-            "phone," +
-            "interests  " +
-            "FROM user order by username";
-
-    public static final String SQL_SELECT_USER_BY_ID = "SELECT u.id, " +
+    public static final String SQL_SELECT_RECENT_USERS =
+            "SELECT " +
+            "u.id as user_id, " +
             "u.username, " +
             "u.password, " +
             "u.first_name, " +
@@ -40,25 +33,35 @@ public class UserDaoImpl implements UserDao {
             "u.sex," +
             "u.phone," +
             "u.interests,  " +
+            "u.country as country_id,  " +
+            "c.name as country_name  " +
+            "FROM user u " +
+            "LEFT JOIN countries c ON c.id = u.country " +
+            "order by registered DESC LIMIT :maxUsersCount";
+
+    public static final String SQL_SELECT_USER_BY_ID =
+            "SELECT " +
+            "u.id as user_id, " +
+            "u.username, " +
+            "u.password, " +
+            "u.first_name, " +
+            "u.last_name, " +
+            "u.date_of_birth," +
+            "u.sex," +
+            "u.phone," +
+            "u.interests,  " +
+            "u.country as country_id,  " +
+            "c.name as country_name,  " +
             "r.name as role_name  " +
             "FROM user u " +
             "LEFT JOIN user_role ur ON ur.user_id = u.id " +
             "LEFT JOIN role r ON r.id = ur.role_id " +
+            "LEFT JOIN countries c ON c.id = u.country " +
             "WHERE u.id =:user_id";
 
-    public static final String SQL_SELECT_USER_BY_PREFIX = "SELECT id, " +
-            "username, " +
-            "password, " +
-            "first_name, " +
-            "last_name, " +
-            "date_of_birth," +
-            "sex," +
-            "phone," +
-            "interests  " +
-            "FROM user WHERE first_name LIKE :firstPrefix AND last_name LIKE :lastPrefix " +
-            "order by id";
-
-    public static final String SQL_SELECT_USER_BY_EMAIL = "SELECT u.id, " +
+    public static final String SQL_SELECT_USER_BY_PREFIX =
+            "SELECT " +
+            "u.id as user_id, " +
             "u.username, " +
             "u.password, " +
             "u.first_name, " +
@@ -67,10 +70,30 @@ public class UserDaoImpl implements UserDao {
             "u.sex," +
             "u.phone," +
             "u.interests,  " +
+            "u.country as country_id,  " +
+            "c.name as country_name  " +
+            "FROM user u " +
+            "LEFT JOIN countries c ON c.id = u.country " +
+            "WHERE first_name LIKE :firstPrefix AND last_name LIKE :lastPrefix " +
+            "order by u.id";
+
+    public static final String SQL_SELECT_USER_BY_EMAIL =
+            "SELECT u.id as user_id, " +
+            "u.username, " +
+            "u.password, " +
+            "u.first_name, " +
+            "u.last_name, " +
+            "u.date_of_birth," +
+            "u.sex," +
+            "u.phone," +
+            "u.interests,  " +
+            "u.country as country_id,  " +
+            "c.name as country_name,  " +
             "r.name as role_name  " +
             "FROM user u " +
             "LEFT JOIN user_role ur ON ur.user_id = u.id " +
             "LEFT JOIN role r ON r.id = ur.role_id " +
+            "LEFT JOIN countries c ON c.id = u.country " +
             "WHERE username =:email";
 
     public static final String SQL_MAKE_USER_ADMIN_BY_ID = "UPDATE user_role ur " +
@@ -78,14 +101,16 @@ public class UserDaoImpl implements UserDao {
             "WHERE ur.user_id =:user_id";
     private static final String SQL_BLOCK_USER_BY_ID = "DELETE FROM user_role " +
             "WHERE user_id =:user_id";
-    private static final String SQL_CREATE_NEW_USER = "INSERT INTO user (username, password, first_name, last_name, date_of_birth, sex, phone, registered) " +
-            "VALUES (:username, :password, :first_name, :last_name, :dob, :sex, :phone, current_date())";
+    private static final String SQL_CREATE_NEW_USER = "INSERT INTO user (username, password, first_name, last_name, date_of_birth, sex, phone, registered, country) " +
+            "VALUES (:username, :password, :first_name, :last_name, :dob, :sex, :phone, current_date(), (SELECT id FROM countries WHERE name =:country ))";
     public static final String SQL_UPDATE_USER_BY_ID = "UPDATE user " +
             "SET first_name =:first_name," +
             "last_name =:last_name," +
             "phone =:phone," +
             "sex =:sex," +
-            "date_of_birth =:dob " +
+            "date_of_birth =:dob, " +
+            "interests =:interests, " +
+            "country = (SELECT id FROM countries WHERE name =:country )" +
             "WHERE id =:user_id";
 
     public static final String SQL_UPDATE_PASSWORD_BY_USER_ID = "UPDATE user " +
@@ -143,6 +168,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    @Transactional
     public User makeUserAdminById(Long userId) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("user_id", userId);
@@ -154,6 +180,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    @Transactional
     public User blockUserById(Long userId) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("user_id", userId);
@@ -165,12 +192,22 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> findAllUsers() {
-        return namedParameterJdbcTemplate.query(SQL_SELECT_ALL_USERS, new UserMapper());
+    public List<User> getRecentUsers(int maxUsersCount) {
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("maxUsersCount", maxUsersCount);
+
+        return namedParameterJdbcTemplate.query(SQL_SELECT_RECENT_USERS, parameters, new UserShortMapper());
     }
 
     @Override
-    public int updateUserSettings(String firstName, String lastName, LocalDate dob, String sex, String phone, Long id) {
+    public int updateUserSettings(String firstName,
+                                  String lastName,
+                                  LocalDate dob,
+                                  String sex,
+                                  String phone,
+                                  Long id,
+                                  String countryName,
+                                  String interests) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("user_id", id);
         parameters.addValue("sex", sex);
@@ -178,6 +215,8 @@ public class UserDaoImpl implements UserDao {
         parameters.addValue("last_name", lastName);
         parameters.addValue("phone", phone);
         parameters.addValue("dob", dob.toString());
+        parameters.addValue("country", countryName);
+        parameters.addValue("interests", interests);
         return updateUser(SQL_UPDATE_USER_BY_ID, parameters);
     }
 
@@ -190,6 +229,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    @Transactional
     public User createUser(User user) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("username", user.getEmail());
@@ -199,6 +239,7 @@ public class UserDaoImpl implements UserDao {
         parameters.addValue("phone", user.getPhone());
         parameters.addValue("dob", user.getDob().toString());
         parameters.addValue("sex", user.getSex().getGenderLetter());
+        parameters.addValue("country", Optional.ofNullable(user.getCountry()).map(Country::getName).orElse(null));
 
         int i = updateUser(SQL_CREATE_NEW_USER, parameters);
         if (i > 0) {
@@ -214,7 +255,9 @@ public class UserDaoImpl implements UserDao {
                 user.getDob(),
                 getUserSex(user),
                 user.getPhone(),
-                user.getId());
+                user.getId(),
+                Optional.ofNullable(user.getCountry()).map(Country::getName).orElse(null),
+                user.getInterests());
     }
 
     @Override

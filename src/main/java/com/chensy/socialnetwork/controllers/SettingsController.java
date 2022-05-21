@@ -2,6 +2,7 @@ package com.chensy.socialnetwork.controllers;
 
 import com.chensy.socialnetwork.dto.PasswordChangeDTO;
 import com.chensy.socialnetwork.dto.UserDTO;
+import com.chensy.socialnetwork.service.CountryService;
 import com.chensy.socialnetwork.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,9 +26,12 @@ public class SettingsController {
 
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final CountryService countryService;
 
     @GetMapping("/settings")
-    public String getSettingsPage(Model model) {
+    public String getSettingsPage(Model model, HttpServletRequest request) {
+        model.addAttribute("countryList", countryService.getAllCountries());
+        model.addAttribute("user", getUserFromSession(request));
         model.addAttribute("passwordChangeDTO", new PasswordChangeDTO());
         return "settings";
     }

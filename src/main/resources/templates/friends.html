@@ -31,7 +31,7 @@
                 <table class="table friends">
                     <tr th:each="user : ${usersNotAcceptedRequests}">
                         <td>
-                            <a th:replace="template.html :: profileImage(${user})"></a>
+                            <a th:replace="template.html :: profileUser(${user})"></a>
                         </td>
                         <td>
                             <a th:href="@{'/user/conversation/' + ${user.id}}" href="#" class="btn btn-info" th:text="#{message}">Message</a>
@@ -47,7 +47,7 @@
                 <table class="table friends">
                     <tr th:each="user : ${notAcceptedRequestsToUser}">
                         <td>
-                            <a th:replace="template.html :: profileImage(${user})"></a>
+                            <a th:replace="template.html :: profileUser(${user})"></a>
                         </td>
                         <td>
                             <a class="btn btn-success" th:href="@{'/user/friends/' + ${user.id} + '/accept'}" th:text="#{friends.accept}">Accept</a>
@@ -67,7 +67,7 @@
                 <table class="table friends">
                     <tr th:each="user : ${friendsOfUser}">
                         <td>
-                            <a th:replace="template.html :: profileImage(${user})"></a>
+                            <a th:replace="template.html :: profileUser(${user})"></a>
                         <td>
                         <a th:href="@{'/user/conversation/' + ${user.id}}" href="#" class="btn btn-info" th:text="#{message}">Message</a>
                         </td>

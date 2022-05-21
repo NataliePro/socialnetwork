@@ -13,10 +13,10 @@ public interface UserDao {
     List<User> getUsersByFirstNameAndLastNamePrefix(String firstPrefix, String lastPrefix);
     User makeUserAdminById(Long userId);
     User blockUserById(Long userId);
-    List<User> findAllUsers();
+    List<User> getRecentUsers(int maxUsersCount);
     int updateUserSettings(String firstName, String lastName,
                            LocalDate dob, String sex, String phone,
-                           Long id);
+                           Long id, String country, String interests);
     int updatePassword(String password, Long id);
     User createUser(User user);
     void updateUser(User user);
